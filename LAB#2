@@ -1,0 +1,102 @@
+/*create table users.They can signup/login to the website*/
+CREATE TABLE Users (
+   User_ID INT(11) UNSIGNED PRIMARY KEY AUTO_INCREMENT,
+   First_Name VARCHAR(100) NOT NULL,
+   Last_Name VARCHAR(100) NOT NULL,
+   Email VARCHAR(50) UNIQUE NOT NULL,
+   Password VARCHAR(50) NOT NULL,
+   City VARCHAR(20),
+   State VARCHAR(20),
+   Phone VARCHAR(15) NOT NULL,
+   Register_Date DATE NOT NULL,
+   Complaint_ID INT(10),
+   Complaint_Details VARCHAR(255) NOT NULL
+);
+
+/*create table employees by copying selected columns from users table*/
+CREATE TABLE Employees AS
+      (SELECT Register_Date,Complaint_ID,Complaint_Details 
+      FROM Users);
+
+/*add 3-new columns to employees table.Employees can mark complaint_status as completed/inprogress/stuck*/
+ALTER TABLE Employees
+    ADD (Employee_ID INT(15) PRIMARY KEY,
+         Employee_Name VARCHAR(100) NOT NULL,
+         Complaint_Status VARCHAR(40) NOT NUll);
+
+/*update employees table*/
+UPDATE Employees
+SET Complaint_Status = 'closed'
+WHERE Complaint_Status is 'completed';
+
+/*create table Agents,can login to the website*/
+CREATE TABLE Agents (
+   Agent_Code INT(10) PRIMARY KEY,
+   Agent_Name VARCHAR(100) NOT NULL,
+   Email VARCHAR(50) NOT NULL,
+   Password VARCHAR(50) NOT NULL,
+   Complaint_ID INT
+   );
+
+/*select complaint_id data from employees and insert into agents*/
+ INSERT INTO Agents(Complaint_ID)
+ SELECT Complaint_ID
+ FROM Employees;
+
+ /*use left join clause to join two tables agents and employees*/
+  SELECT
+       A.Agent_Code,
+       A.Agent_Name,
+       A.Complaint_ID,
+       E.Employee_ID,
+       E.Complaint_Status
+  FROM
+       Agents A
+
+  LEFT JOIN Employees E
+       ON A.Complaint_ID = E.Complaint_ID
+
+  Where
+       Complaint_Status is 'stuck';
+
+
+/*update resultant table*/
+ UPDATE result_set
+ SET Complaint_Status = 'work assigned'
+ WHERE Complaint_Status is 'stuck';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
